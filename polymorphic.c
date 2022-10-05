@@ -20,14 +20,26 @@ void foo3(void*, int, int);
 Vtbl g_vtbl = { &foo1, &foo2, &foo3 };
 
 void foo1(void* this_ptr) {
+	if (this_ptr == NULL) {
+		printf("Derivec class, parameter wrong.\n");
+		return;
+	}
 	Base* ptr = (Base*)this_ptr;
 	printf("function 1 : %d .\n", ptr->ele1);
 }
 void foo2(void* this_ptr, int val1) {
+	if (this_ptr == NULL) {
+		printf("Derivec class, parameter wrong.\n");
+		return;
+	}
 	Base* ptr = (Base*)this_ptr;
 	printf("function 2 : %d .\n", ptr->ele2);
 }
 void foo3(void* this_ptr, int val1, int val2) {
+	if (this_ptr == NULL) {
+		printf("Derivec class, parameter wrong.\n");
+		return;
+	}
 	Base* ptr = (Base*)this_ptr;
 	printf("function 3 : %d and %d \n", ptr->ele1, ptr->ele2);
 }
@@ -63,10 +75,11 @@ void initDerive(Derive *p) {
 void sfool (void* this_ptr) {
 	if (this_ptr == NULL) {
 		printf("Derivec class, parameter wrong.\n");
-	} else {
-		Derive* ptr = (Derive*)this_ptr;
-		printf("Derived class print : %d .\n", ptr->ele3);
-	}
+		return;
+	} 
+	Derive* ptr = (Derive*)this_ptr;
+	printf("Derived class print : %d .\n", ptr->ele3);
+	
 }
 
 
@@ -79,5 +92,9 @@ int main() {
 	Derive de;
 	initDerive(&de);
 	(((Svtbl*)(de.a.ptr_vtbl))->pf4)(&de);
+	Svtbl* ptr_der = (Svtbl*)(de.a.ptr_vtbl);
+	ptr_der->pf4(&de);
+	ptr_der->base_vbtl.pf1(NULL);
+
 	return 0;
 }
